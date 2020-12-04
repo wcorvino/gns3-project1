@@ -1,6 +1,6 @@
 ---
 - name: Backup show run (enable mode commands)
-  hosts: R1,R2,R3,R4,R5,R6,R7,S1
+  hosts: all
   gather_facts: false
   connection: local
   
