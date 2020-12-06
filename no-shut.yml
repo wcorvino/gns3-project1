@@ -1,0 +1,15 @@
+---
+- name: GNS3 no shut
+  hosts: R1,R4
+  gather_facts: fakse
+  connection: local
+  tasks:
+    - name: Interface Settings
+      ios_config:
+        parents:
+          - interface GigabitEthernet0/0
+        lines:
+          - no shutdown
+      register: print_output
+    -  debug: var=print_output
+
