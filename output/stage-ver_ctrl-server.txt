@@ -1,0 +1,134 @@
+!!routers
+ip domain-name test.net
+enable secret cisco
+username cisco secret cisco
+username cisco privilege 15
+crypto key generate rsa modulus 1024
+!
+line vty 0-4
+logon local
+transport inout telnet ssh
+password cisco
+
+!!ubuntu server
+Host list /etc
+192.168.1.100 R1
+192.168.1.200 R2
+192.168.2.100 R3
+192.168.2.200 R4
+
+!!ansible host list
+[mcastnet-routers]
+R1
+R2
+R3
+
+[routers]
+R1
+R2
+R3
+R4
+
+
+Install git
+# apt-get install git
+# git --version
+
+
+Install ansible
+# apt-get install ansible
+# ansible --version
+# apt-get install ansible-lint
+
+git init !! initalize ansible / local git directory 
+git status
+
+-configure ansible hosts and defaults
+cd /etc/ansible
+mkdir output
+nano hosts  !!append hostlist
+
+nano ansible.cfg !! update defaults section
+[defaults]
+hostfile = ./hosts
+host_key_checking = false
+timeout = 5
+
+-configure etc hosts file
+cd /etc
+nano hosts
+
+accept / store RSA keys for managed routers (ansible host list)
+ssh cisco@R1
+ssh cisco@R2
+ssh cisco@R3
+ssh cisco@R4
+
+!!install sshpass for ansible ssh sessions
+apt-get install sshpass
+
+!! ?create yaml file, run linter
+!!test ansibleile
+
+!!ad hoc
+ansible all -u cisco -m raw -a 'show ip interface brief' -k -c ssh
+
+!!yaml - playbook
+ansible-playbook getver1.yml -u cisco -k -c ssh
+ansible-playbook runbackup1.yml -u cisco -k -c ssh
+
+!!git
+git status
+git add .
+
+!! create git repository
+git config -- global user.email "wcorvino@verizon.net"
+git config -- global user.name "wcorvino"
+
+add "https://docs.github.com/en/free-pro-team@latest/github/using-git/adding-a-remote"
+# git remote add origin https://github.com/user/repo.git
+$ git remote add origin https://github.com/wcorvino/Project3.git
+# Set a new remote
+
+$ git remote -v
+# Verify new remote
+> origin  https://github.com/user/repo.git (fetch)
+> origin  https://github.com/user/repo.git (push)
+
+!!??new branch, merge ?
+
+!!ubuntu ssh know keys clean up
+check  ssh : ansible all -u cisco -m raw -a 'show version' -k -c ssh
+fix     keys : ex. R1 rsa regenerated crypto key generate rsa modulus 1024;
+                   UbuntuServer-1 $ ssh-keygen -f "/root/.ssh/known_hosts" -R "r1"
+create ssh key
+ssh-keygen
+cd ~/.ssh
+ls
+cat id_rsa.pub
+copy key to clipboard, then goto git hub settings, tab name "SSH and CPG keys tab"
+and paste new key material. This make ssh link operational, use ssh link 
+https : "https://github.com/wcorvino/<repo>.git"
+ssh   : "git@github.com:wcorvino/<repo>.git"  !! username/password - no longer required
+
+
+!!more git notes
+!!--------------------
+!! Local - where git init
+!! Remote - anyhost not git init
+
+!!new repo
+echo "# read me" >> README.md
+git init
+git add README.md
+git commit -m "first commit - file origin"
+git remote add origin https://github.com/wcorvino/<repo>.git
+git push -u origin master
+
+!! push an existing repo
+git remote add origin https://github.com/wcorvino/<repo>.git
+git push -u origin master
+
+!! pull existing using ssh, instead of http
+git remote set-url origin git@github.com:wcorvino/<repo>.git
+git pull
