@@ -68,7 +68,7 @@ ssh cisco@R4
 apt-get install sshpass
 
 !! ?create yaml file, run linter
-!!test ansibleile
+!!test ansible
 
 !!ad hoc
 ansible all -u cisco -m raw -a 'show ip interface brief' -k -c ssh
